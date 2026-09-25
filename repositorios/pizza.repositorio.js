@@ -1,52 +1,46 @@
-//Esta es la capa dpnde se persisten los datos
+// Esta es la capa donde se persisten los datos
 
-const sleep = (ms) => new Promise ((resolve) => setTimeout(resolve, ms))
-let pizzas = [{ id:1, nombre: "Toluqueña", descripcion: "Chorizo, queso oaxaca y piña"}]   
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 
 /**
- * Retorna la lista de las pizzas 
- * @returns []
+ * Retorna la lista de todas las pizzas almacenadas.
+ * @returns {Array} Lista de pizzas
  */
-
 export async function obtenerTodasLasPizzasAsync() {
-    await sleep(2000)
-
     return pizzas
 }
 
 /**
- * Regresa la pizza del id buscado o undefined si no lo encuentra 
- * @param {*} id 
- * @returns 
+ * Regresa la pizza del id buscado o undefined si no lo encuentra.
+ * @param {*} id Identificador de la pizza que se desea buscar
+ * @returns {Object|undefined} Pizza encontrada o undefined
  */
 export async function obtenerPizzaPorIdAsync(id) {
-    await sleep(1000)
-    const pizza = pizzas.find (x => x.id == id)
-
-    return pizza
+    return pizzas.find(x => x.id == id)
 }
 
-export async function agregarPizzaAsync(pizza){
-    await sleep(1000)
-    pizzas.push(pizza)
+/**
+ * Agrega una nueva pizza a la lista de pizzas.
+ * @param {Object} pizza Pizza que se desea agregar
+ * @returns {void} No retorna ningún valor
+ */
+export async function agregarPizzaAsync(pizza) {
 }
 
-
-export async function actualzarPizzaAsync(pizza){
-    await sleep(1000)
-
-    //buscar la pizza
-    const pizzaEncontrada = pizzas.find(x => x.id == pizza.id)
-
-    //actualizar los datos
-    pizzaEncontrada.nombre = pizza.nombre
-    pizzaEncontrada.descripcion = pizza.descripcion
+/**
+ * Actualiza los datos de una pizza existente.
+ * Busca la pizza mediante su id y modifica su nombre y descripción.
+ * @param {Object} pizza Pizza con los datos actualizados
+ * @returns {void} No retorna ningún valor
+ */
+export async function actualzarPizzaAsync(pizza) {
 }
 
-export async function borrarPizzaAsync(id){
-    await sleep(1000)
-
-    const indice = pizzas.findIndex(x => x.id == id)
-
-    pizzas.splice(indice, 1)
+/**
+ * Elimina una pizza de la lista mediante su id.
+ * @param {*} id Identificador de la pizza que se desea eliminar
+ * @returns {void} No retorna ningún valor
+ */
+export async function borrarPizzaAsync(id) {
 }

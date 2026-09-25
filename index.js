@@ -39,7 +39,7 @@ app.put("/api/v1/pizzas/:id", async (req, res) => {
 
   await actualzarPizzaAsync(pizza)
 
-  return res.status(200).json(pizza)
+  return res.status(202).json(pizza)
 });
 
 app.delete("/api/v1/pizzas/:id", async (req, res) => {
