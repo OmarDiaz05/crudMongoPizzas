@@ -1,46 +1,85 @@
-// Esta es la capa donde se persisten los datos
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
+import { conectarMongo } from '../conexion.js'
 
 /**
- * Retorna la lista de todas las pizzas almacenadas.
- * @returns {Array} Lista de pizzas
+ * Obtiene todos los documentos de la colección pizzas.
+ * @returns {Promise<Array>} Arreglo con todas las pizzas encontradas en la base de datos.
  */
 export async function obtenerTodasLasPizzasAsync() {
-    return pizzas
+    // Conectamos a la base de datos
+    const db = await conectarMongo();
+    
+    // Usamos find() para obtener el cursor y toArray() para convertir los documentos a un arreglo
+    const pizzas = await db.collection("pizzas").find().toArray();
+    
+    return pizzas;
 }
 
 /**
- * Regresa la pizza del id buscado o undefined si no lo encuentra.
- * @param {*} id Identificador de la pizza que se desea buscar
- * @returns {Object|undefined} Pizza encontrada o undefined
+ * Busca una pizza específica por su campo 'id'.
+ * Convierte el ID recibido (que puede ser string desde Express) a número para la comparación.
+ * @param {string|number} id Identificador de la pizza que se desea buscar.
+ * @returns {Promise<Object|null>} Pizza encontrada o null si el documento no existe.
  */
 export async function obtenerPizzaPorIdAsync(id) {
-    return pizzas.find(x => x.id == id)
+    const db = await conectarMongo();
+    
+    // Convertimos el id a número para que coincida con el tipo de dato almacenado { id: 1, ... }
+    const idNumerico = Number(id);
+    
+    // Usamos findOne para obtener un solo documento cuyo campo 'id' coincida
+    const pizza = await db.collection("pizzas").findOne({ id: idNumerico });
+    
+    return pizza;
 }
 
 /**
- * Agrega una nueva pizza a la lista de pizzas.
- * @param {Object} pizza Pizza que se desea agregar
- * @returns {void} No retorna ningún valor
+ * Inserta una nueva pizza en la colección 'pizzas'.
+ * @param {Object} pizza Objeto con los datos de la pizza (id, nombre, descripcion).
+ * @returns {Promise<Object>} Resultado de la inserción de MongoDB (contiene acknowledged y el insertedId).
  */
 export async function agregarPizzaAsync(pizza) {
+    const db = await conectarMongo();
+    
+    // Insertamos el documento completo recibido en el body de Express
+    const resultado = await db.collection("pizzas").insertOne(pizza);
+    
+    return resultado;
 }
 
 /**
- * Actualiza los datos de una pizza existente.
- * Busca la pizza mediante su id y modifica su nombre y descripción.
- * @param {Object} pizza Pizza con los datos actualizados
- * @returns {void} No retorna ningún valor
+ * Actualiza el nombre y descripción de una pizza existente buscando por su campo 'id'.
+ * No crea otra pizza si el ID no existe.
+ * @param {Object} pizza Objeto con el id de la pizza a actualizar y los nuevos datos.
+ * @returns {Promise<Object>} Resultado de la actualización (permite validar matchedCount y modifiedCount).
  */
 export async function actualzarPizzaAsync(pizza) {
+    const db = await conectarMongo();
+    
+    // Convertimos el id recibido a número
+    const idNumerico = Number(pizza.id);
+
+    // Actualizamos utilizando updateOne y el operador $set para modificar solo los campos específicos
+    const resultado = await db.collection("pizzas").updateOne(
+        { id: idNumerico }, 
+        { $set: { nombre: pizza.nombre, descripcion: pizza.descripcion } }
+    );
+    
+    return resultado;
 }
 
 /**
- * Elimina una pizza de la lista mediante su id.
- * @param {*} id Identificador de la pizza que se desea eliminar
- * @returns {void} No retorna ningún valor
+ * Elimina una pizza de la colección utilizando su campo 'id'.
+ * @param {string|number} id Identificador de la pizza que se desea eliminar.
+ * @returns {Promise<Object>} Resultado de la eliminación (permite validar deletedCount para saber si realmente se borró).
  */
 export async function borrarPizzaAsync(id) {
+    const db = await conectarMongo();
+    
+    // Convertimos el id a número
+    const idNumerico = Number(id);
+
+    // Eliminamos el documento que coincida exactamente con ese id
+    const resultado = await db.collection("pizzas").deleteOne({ id: idNumerico });
+    
+    return resultado;
 }
