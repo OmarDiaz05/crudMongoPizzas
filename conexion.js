@@ -1,14 +1,22 @@
 import { MongoClient } from 'mongodb'
+import 'dotenv/config'
 
-const cadenaConexion = "mongodb://root:12345678@localhost:27017/"
-
+const cadenaConexion = process.env.MONGO_URI
 const cliente = new MongoClient(cadenaConexion)
 
+
+let db 
+
 export async function conectarMongo() {
+    if (db) {
+        return db
+    }
+ 
     await cliente.connect()
     console.log("Conectado a MongoDB")
 
-    return cliente.db("pizzas")
+    db = cliente.db("pizzas")
+    return db
 }
 
-conectarMongo()
+conectarMongo().catch(error => console.error("Error en conectar a Mongo:", error))

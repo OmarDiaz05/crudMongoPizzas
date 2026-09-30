@@ -8,7 +8,7 @@ API desarrollada con Express y el driver oficial nativo de MongoDB para gestiona
 * **Base de datos:** `pizzas`
 * **Colección:** `pizzas`
 
-Formato de documento esperado:
+## Formato de documento esperado:
 ```json
 {
   "id": 1,
@@ -16,14 +16,14 @@ Formato de documento esperado:
   "descripcion": "Jalapeño, Chorizo"
 }
 
-2. Instalación y Ejecución
+## 2. Instalación y Ejecución
 Instalar dependencias:
 npm install
 Iniciar el servidor:
 npm run dev
 El servidor arrancará en: http://localhost:3000
 
-3. Endpoints (Rutas)
+## 3. Endpoints (Rutas)
 GET /api/v1/pizzas - Obtiene todas las pizzas.
 
 GET /api/v1/pizzas/:id - Obtiene una pizza por su id.
